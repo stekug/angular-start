@@ -12,6 +12,10 @@ export class UserComponent {
   @Input({ required: true }) name!: string;
   @Output() select = new EventEmitter();
 
+  // Signal Inputs
+  // avatar = input.required<string>();
+  // name = input.required<string>();
+
   get imagePath() {
     return 'assets/users/' + this.avatar;
   }
