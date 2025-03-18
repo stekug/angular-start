@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-server-status',
@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
   templateUrl: './server-status.component.html',
   styleUrl: './server-status.component.css',
 })
-export class ServerStatusComponent {
+export class ServerStatusComponent implements OnInit {
   currentStatus: 'online' | 'offline' | 'unknown' = 'online';
 
   // Its not wrong to do something like this, but there is another way, (Component Lifecycle)
@@ -26,6 +26,7 @@ export class ServerStatusComponent {
   // }
 
   // This would be the better way:
+  // Because of "implements OnInit"
   ngOnInit() {
     setInterval(() => {
       const rnd = Math.random();
