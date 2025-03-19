@@ -1,4 +1,11 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  OnDestroy,
+  inject,
+  DestroyRef,
+} from '@angular/core';
 
 @Component({
   selector: 'app-server-status',
@@ -7,9 +14,12 @@ import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
   templateUrl: './server-status.component.html',
   styleUrl: './server-status.component.css',
 })
-export class ServerStatusComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ServerStatusComponent implements OnInit, AfterViewInit {
   currentStatus: 'online' | 'offline' | 'unknown' = 'online';
-  private interval?: ReturnType<typeof setInterval>;
+  // private interval?: ReturnType<typeof setInterval>;
+
+  // This is the newer way, since angular 16
+  private destroyRef = inject(DestroyRef);
 
   constructor() {}
 
@@ -31,7 +41,8 @@ export class ServerStatusComponent implements OnInit, AfterViewInit, OnDestroy {
   // This would be the better way:
   // Because of "implements OnInit"
   ngOnInit() {
-    setInterval(() => {
+    console.log('on init');
+    const interval = setInterval(() => {
       const rnd = Math.random();
 
       if (rnd < 0.33) {
@@ -42,13 +53,18 @@ export class ServerStatusComponent implements OnInit, AfterViewInit, OnDestroy {
         this.currentStatus = 'unknown';
       }
     }, 5000);
+
+    this.destroyRef.onDestroy(() => {
+      clearInterval(interval);
+    });
   }
 
   ngAfterViewInit() {
     console.log('After view init');
   }
 
-  ngOnDestroy() {
-    clearTimeout(this.interval);
-  }
+  // This is the older Variant
+  // ngOnDestroy() {
+  //   clearTimeout(this.interval);
+  // }
 }
