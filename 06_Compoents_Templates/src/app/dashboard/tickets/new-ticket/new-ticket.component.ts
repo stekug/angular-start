@@ -12,7 +12,7 @@ import { ControlComponent } from '../../../shared/control/control.component';
   styleUrl: './new-ticket.component.css',
 })
 export class NewTicketComponent {
-  onSubmit() {
-    console.log('Submitted!');
+  onSubmit(titleElement: HTMLInputElement) {
+    console.dir(titleElement.value);
   }
 }
