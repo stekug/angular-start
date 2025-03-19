@@ -5,6 +5,8 @@ import {
   OnDestroy,
   inject,
   DestroyRef,
+  signal,
+  effect,
 } from '@angular/core';
 
 @Component({
@@ -15,13 +17,14 @@ import {
   styleUrl: './server-status.component.css',
 })
 export class ServerStatusComponent implements OnInit, AfterViewInit {
-  currentStatus: 'online' | 'offline' | 'unknown' = 'online';
-  // private interval?: ReturnType<typeof setInterval>;
-
-  // This is the newer way, since angular 16
+  currentStatus = signal<'online' | 'offline' | 'unknown'>('offline');
   private destroyRef = inject(DestroyRef);
 
-  constructor() {}
+  constructor() {
+    effect(() => {
+      console.log(this.currentStatus());
+    });
+  }
 
   // Its not wrong to do something like this, but there is another way, (Component Lifecycle)
   // constructor() {
@@ -46,11 +49,11 @@ export class ServerStatusComponent implements OnInit, AfterViewInit {
       const rnd = Math.random();
 
       if (rnd < 0.33) {
-        this.currentStatus = 'online';
+        this.currentStatus.set('online');
       } else if (rnd < 0.66) {
-        this.currentStatus = 'offline';
+        this.currentStatus.set('offline');
       } else {
-        this.currentStatus = 'unknown';
+        this.currentStatus.set('unknown');
       }
     }, 5000);
 
