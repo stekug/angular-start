@@ -37,6 +37,6 @@ export class TemperaturPipe implements PipeTransform {
       symbol = outputType == 'cel' ? '°C' : '°F';
     }
 
-    return `${outputTemp} ${symbol}`;
+    return `${outputTemp.toFixed(1)} ${symbol}`;
   }
 }
