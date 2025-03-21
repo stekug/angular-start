@@ -15,6 +15,7 @@ export class NewTaskComponent {
   constructor(private tasksService: TasksService) {}
 
   onAddTask(title: string, description: string) {
+    this.tasksService.addTask({ title, description });
     this.formEl()?.nativeElement.reset();
   }
 }
