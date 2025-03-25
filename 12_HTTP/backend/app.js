@@ -41,7 +41,7 @@ app.get('/user-places', async (req, res) => {
 app.put('/user-places', async (req, res) => {
   const placeId = req.body.placeId;
 
-  return res.status(500).json();
+  // return res.status(500).json();
 
   const fileContent = await fs.readFile('./data/places.json');
   const placesData = JSON.parse(fileContent);
@@ -66,6 +66,7 @@ app.put('/user-places', async (req, res) => {
 });
 
 app.delete('/user-places/:id', async (req, res) => {
+  console.log('delete');
   const placeId = req.params.id;
 
   const userPlacesFileContent = await fs.readFile('./data/user-places.json');
