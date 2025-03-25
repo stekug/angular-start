@@ -7,6 +7,8 @@ import { PlacesContainerComponent } from '../places-container/places-container.c
 import { catchError, map, throwError } from 'rxjs';
 import { SpinnerComponent } from '../../shared/spinner/spinner.component';
 
+const SERVER_ADDRESS = 'http://localhost:3000';
+
 @Component({
   selector: 'app-available-places',
   standalone: true,
@@ -24,7 +26,7 @@ export class AvailablePlacesComponent implements OnInit {
   ngOnInit() {
     this.isFetching.set(true);
     const subscription = this.httpClient
-      .get<{ places: Place[] }>('http://localhost:3000/places')
+      .get<{ places: Place[] }>(`${SERVER_ADDRESS}/places`)
       .pipe(
         map((resData) => resData.places),
         catchError((error) => {
@@ -53,5 +55,15 @@ export class AvailablePlacesComponent implements OnInit {
     this.destroyRef.onDestroy(() => {
       subscription.unsubscribe();
     });
+  }
+
+  onSelectPlace(selectedPlace: Place) {
+    this.httpClient
+      .put(`${SERVER_ADDRESS}/user-places`, {
+        placeId: selectedPlace.id,
+      })
+      .subscribe({
+        next: (resData) => console.log(resData),
+      });
   }
 }
