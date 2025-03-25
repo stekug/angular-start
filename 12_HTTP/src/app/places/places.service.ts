@@ -34,11 +34,22 @@ export class PlacesService {
   }
 
   addPlaceToUserPlaces(place: Place) {
-    this.userPlaces.update((prevPlaces) => [...prevPlaces, place]);
+    const prevPlaces = this.userPlaces();
 
-    return this.httpClient.put(`${SERVER_ADDRESS}/user-places`, {
-      placeId: place.id,
-    });
+    if (!prevPlaces.some((currPlace) => currPlace.id === place.id)) {
+      this.userPlaces.set([...prevPlaces, place]);
+    }
+
+    return this.httpClient
+      .put(`${SERVER_ADDRESS}/user-places`, {
+        placeId: place.id,
+      })
+      .pipe(
+        catchError((error) => {
+          this.userPlaces.set(prevPlaces);
+          return throwError(() => new Error('Failed to store selected place'));
+        }),
+      );
   }
 
   removeUserPlace(place: Place) {}
