@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { type Place } from '../place.model';
 import { PlacesComponent } from '../places.component';
 import { PlacesContainerComponent } from '../places-container/places-container.component';
-import { map } from 'rxjs';
+import { catchError, map, throwError } from 'rxjs';
 import { SpinnerComponent } from '../../shared/spinner/spinner.component';
 
 @Component({
@@ -17,7 +17,7 @@ import { SpinnerComponent } from '../../shared/spinner/spinner.component';
 export class AvailablePlacesComponent implements OnInit {
   places = signal<Place[] | undefined>(undefined);
   isFetching = signal(false);
-
+  error = signal('');
   private httpClient = inject(HttpClient);
   private destroyRef = inject(DestroyRef);
 
@@ -25,11 +25,26 @@ export class AvailablePlacesComponent implements OnInit {
     this.isFetching.set(true);
     const subscription = this.httpClient
       .get<{ places: Place[] }>('http://localhost:3000/places')
-      .pipe(map((resData) => resData.places))
+      .pipe(
+        map((resData) => resData.places),
+        catchError((error) => {
+          console.log(error);
+          return throwError(
+            () =>
+              new Error(
+                'Something went wrong fetching the places. Please try again later!',
+              ),
+          );
+        }),
+      )
       .subscribe({
         next: (places) => {
           console.log(places);
           this.places.set(places);
+        },
+        error: (error: Error) => {
+          console.log(error);
+          this.error.set(error.message);
         },
         complete: () => {
           this.isFetching.set(false);
