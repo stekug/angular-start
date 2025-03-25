@@ -3,6 +3,7 @@ import { catchError, map, tap, throwError } from 'rxjs';
 
 import { Place } from './place.model';
 import { HttpClient } from '@angular/common/http';
+import { ErrorService } from '../shared/error.service';
 
 const SERVER_ADDRESS = 'http://localhost:3000';
 
@@ -10,6 +11,7 @@ const SERVER_ADDRESS = 'http://localhost:3000';
   providedIn: 'root',
 })
 export class PlacesService {
+  private errorService = inject(ErrorService);
   private httpClient = inject(HttpClient);
   private userPlaces = signal<Place[]>([]);
 
@@ -47,6 +49,7 @@ export class PlacesService {
       .pipe(
         catchError((error) => {
           this.userPlaces.set(prevPlaces);
+          this.errorService.showError('Failed to store selected place');
           return throwError(() => new Error('Failed to store selected place'));
         }),
       );
