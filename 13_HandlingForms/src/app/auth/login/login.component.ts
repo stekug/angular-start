@@ -9,8 +9,10 @@ import { FormsModule, NgForm } from '@angular/forms';
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
-  onSubmit(form: NgForm) {
-    console.log(form);
-    console.log(form.form.value);
+  onSubmit(formData: NgForm) {
+    const enteredEmail = formData.form.value.email;
+    const enteredPassword = formData.form.value.password;
+
+    console.log(enteredEmail, enteredPassword);
   }
 }
