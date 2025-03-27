@@ -18,30 +18,50 @@ export class SignupComponent {
     email: new FormControl('', {
       validators: [Validators.email, Validators.required],
     }),
-    password: new FormControl('', {
-      validators: [Validators.required, Validators.minLength(6)],
+
+    // --> start password group <--
+
+    passwords: new FormGroup({
+      password: new FormControl('', {
+        validators: [Validators.required, Validators.minLength(6)],
+      }),
+      confirmPassword: new FormControl('', {
+        validators: [Validators.required, Validators.minLength(6)],
+      }),
     }),
-    confirmPassword: new FormControl('', {
-      validators: [Validators.required, Validators.minLength(6)],
-    }),
+
+    // --> end password group <--
+
+    // --> name password group <--
+
     firstName: new FormControl('', {
       validators: [Validators.required],
     }),
     lastName: new FormControl('', {
       validators: [Validators.required],
     }),
-    street: new FormControl('', {
-      validators: [Validators.required],
+
+    // --> end name group <--
+
+    // --> start address group <--
+
+    address: new FormGroup({
+      street: new FormControl('', {
+        validators: [Validators.required],
+      }),
+      number: new FormControl('', {
+        validators: [Validators.required],
+      }),
+      postalCode: new FormControl('', {
+        validators: [Validators.required],
+      }),
+      city: new FormControl('', {
+        validators: [Validators.required],
+      }),
     }),
-    number: new FormControl('', {
-      validators: [Validators.required],
-    }),
-    postalCode: new FormControl('', {
-      validators: [Validators.required],
-    }),
-    city: new FormControl('', {
-      validators: [Validators.required],
-    }),
+
+    // --> end address group <--
+
     role: new FormControl<
       'student' | 'teacher' | 'employee' | 'founder' | 'other'
     >('student', { validators: [Validators.required] }),
@@ -50,10 +70,6 @@ export class SignupComponent {
 
   onSubmit() {
     console.log(this.form);
-    const enteredEmail = this.form.value.email;
-    const enteredPassword = this.form.value.password;
-    console.log(enteredEmail);
-    console.log(enteredPassword);
   }
 
   onReset() {
